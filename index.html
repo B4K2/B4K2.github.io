@@ -3,879 +3,35 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
-  <title>Akshat Balyan — Systems & Mechanistic Interpretability Researcher</title>
-  <meta name="description" content="Research Index & Systems Portfolio of Akshat Balyan. LLM Training Systems, Mechanistic Interpretability, and Compute Optimization." />
+  <title>Akshat Balyan — LLM Systems, AI Agents & Interpretability</title>
+  <meta name="description" content="Portfolio of Akshat Balyan. LLM training systems, mechanistic interpretability, long-context DNA models, and safety tooling for AI coding agents." />
 
-  <!-- Google Fonts: Space Grotesk & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
 
-  <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- Three.js for 3D Background -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
-  <style>
-    /* ==========================================================================
-       HIGH-CONTRAST MONOCHROME THEME VARIABLES
-       ========================================================================== */
-    :root[data-theme="dark"] {
-      --bg: #040404;
-      --bg-subtle: #0a0a0a;
-      --bg-card: #0c0c0c;
-      --bg-card-hover: #121212;
-      --fg: #f5f5f5;
-      --fg-muted: #8e8e8e;
-      --fg-subtle: #444444;
-      --border: #222222;
-      --border-bright: #444444;
-      --accent: #ffffff;
-      --accent-inverse: #000000;
-      --code-bg: #080808;
-      --tag-bg: #141414;
-      --chart-axis: #333333;
-      --chart-grid: #181818;
-      --chart-line-main: #ffffff;
-      --chart-line-muted: #666666;
-      --chart-line-accent: #aaaaaa;
-    }
-
-    :root[data-theme="light"] {
-      --bg: #ffffff;
-      --bg-subtle: #f8f8f8;
-      --bg-card: #f4f4f4;
-      --bg-card-hover: #eaeaea;
-      --fg: #000000;
-      --fg-muted: #666666;
-      --fg-subtle: #aaaaaa;
-      --border: #dcdcdc;
-      --border-bright: #999999;
-      --accent: #000000;
-      --accent-inverse: #ffffff;
-      --code-bg: #f0f0f0;
-      --tag-bg: #e5e5e5;
-      --chart-axis: #cccccc;
-      --chart-grid: #eeeeee;
-      --chart-line-main: #000000;
-      --chart-line-muted: #999999;
-      --chart-line-accent: #555555;
-    }
-
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-      font-size: 15px;
-    }
-
-    body {
-      background-color: var(--bg);
-      color: var(--fg);
-      font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
-      line-height: 1.6;
-      overflow-x: hidden;
-      transition: background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-      -webkit-font-smoothing: antialiased;
-    }
-
-    ::selection {
-      background: var(--fg);
-      color: var(--accent-inverse);
-    }
-
-    code, pre, .mono {
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    #canvas-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 0;
-      pointer-events: none;
-      opacity: 0.45;
-    }
-
-    .app-container {
-      position: relative;
-      z-index: 2;
-      max-width: 1140px;
-      margin: 0 auto;
-      padding: 0 1.5rem;
-    }
-
-    section {
-      padding: 4.5rem 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 2rem;
-      border-bottom: 1px solid var(--border-bright);
-      padding-bottom: 0.75rem;
-    }
-
-    .section-num {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.8rem;
-      color: var(--fg-muted);
-      letter-spacing: 0.1em;
-    }
-
-    .section-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.35rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      text-transform: uppercase;
-    }
-
-    /* ==========================================================================
-       TOP NAVIGATION
-       ========================================================================== */
-    .top-nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: var(--bg);
-      border-bottom: 1px solid var(--border);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-    }
-
-    .nav-inner {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.9rem 0;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-    }
-
-    .brand {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.95rem;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 1.25rem;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.8rem;
-      flex-wrap: wrap;
-    }
-
-    .nav-link {
-      color: var(--fg-muted);
-      transition: color 0.15s;
-    }
-    .nav-link:hover {
-      color: var(--fg);
-    }
-
-    .theme-toggle-btn {
-      background: var(--bg-card);
-      color: var(--fg);
-      border: 1px solid var(--border-bright);
-      padding: 0.35rem 0.75rem;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      transition: all 0.2s ease;
-    }
-
-    .theme-toggle-btn:hover {
-      background: var(--fg);
-      color: var(--accent-inverse);
-      border-color: var(--fg);
-    }
-
-    /* ==========================================================================
-       HERO SECTION
-       ========================================================================== */
-    .hero {
-      padding-top: 4.5rem;
-      padding-bottom: 3.5rem;
-    }
-
-    .hero-pretitle {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.8rem;
-      color: var(--fg-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      margin-bottom: 1rem;
-    }
-
-    .hero-name {
-      font-size: clamp(2.4rem, 6vw, 4.4rem);
-      font-weight: 700;
-      line-height: 1.05;
-      letter-spacing: -0.04em;
-      margin-bottom: 1.25rem;
-      text-transform: uppercase;
-    }
-
-    .hero-manifesto {
-      font-size: clamp(1.05rem, 2vw, 1.35rem);
-      color: var(--fg);
-      max-width: 820px;
-      font-weight: 400;
-      line-height: 1.5;
-      margin-bottom: 2rem;
-    }
-
-    .hero-manifesto span {
-      color: var(--fg-muted);
-    }
-
-    .metrics-bar {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-      margin-bottom: 2rem;
-    }
-
-    .metric-cell {
-      background: var(--bg);
-      padding: 1.1rem;
-    }
-
-    .metric-val {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 1.45rem;
-      font-weight: 700;
-      line-height: 1;
-      margin-bottom: 0.35rem;
-    }
-
-    .metric-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.7rem;
-      color: var(--fg-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.85rem;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.82rem;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      padding: 0.6rem 1.15rem;
-      border: 1px solid var(--border-bright);
-      font-weight: 600;
-      transition: all 0.18s ease;
-      cursor: pointer;
-    }
-
-    .btn-primary {
-      background: var(--fg);
-      color: var(--accent-inverse);
-      border-color: var(--fg);
-    }
-
-    .btn-primary:hover {
-      background: transparent;
-      color: var(--fg);
-      border-color: var(--fg);
-    }
-
-    .btn-secondary {
-      background: transparent;
-      color: var(--fg);
-      border-color: var(--border-bright);
-    }
-
-    .btn-secondary:hover {
-      border-color: var(--fg);
-      background: var(--bg-card-hover);
-    }
-
-    /* ==========================================================================
-       RESEARCH & PUBLICATIONS
-       ========================================================================== */
-    .research-card {
-      border: 1px solid var(--border);
-      background: var(--bg-card);
-      padding: 1.85rem;
-      margin-bottom: 1.75rem;
-      transition: border-color 0.2s ease, transform 0.2s ease;
-    }
-
-    .research-card:hover {
-      border-color: var(--fg);
-      transform: translateY(-2px);
-    }
-
-    .card-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    .pub-badge {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.7rem;
-      padding: 0.2rem 0.55rem;
-      background: var(--tag-bg);
-      border: 1px solid var(--border-bright);
-      text-transform: uppercase;
-      font-weight: 600;
-    }
-
-    .pub-title {
-      font-size: 1.3rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      margin-top: 0.5rem;
-      line-height: 1.3;
-    }
-
-    .card-links {
-      display: flex;
-      gap: 0.65rem;
-      flex-wrap: wrap;
-    }
-
-    .pub-desc {
-      color: var(--fg-muted);
-      font-size: 0.92rem;
-      line-height: 1.6;
-      margin-bottom: 1.25rem;
-    }
-
-    .findings-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-      margin-bottom: 1.25rem;
-      font-size: 0.88rem;
-    }
-
-    .findings-list li {
-      position: relative;
-      padding-left: 1.4rem;
-    }
-
-    .findings-list li::before {
-      content: "↳";
-      position: absolute;
-      left: 0;
-      color: var(--fg-muted);
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    .findings-list strong {
-      color: var(--fg);
-      font-weight: 600;
-    }
-
-    .tag-strip {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.45rem;
-    }
-
-    .tech-tag {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.7rem;
-      color: var(--fg-muted);
-      border: 1px solid var(--border);
-      padding: 0.2rem 0.5rem;
-      background: var(--bg);
-    }
-
-    /* ==========================================================================
-       BALANCED 2X2 SYSTEMS GRID
-       ========================================================================== */
-    .systems-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1.5rem;
-    }
-
-    .system-card {
-      border: 1px solid var(--border);
-      background: var(--bg-card);
-      padding: 1.6rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      min-height: 260px;
-      transition: all 0.2s ease;
-    }
-
-    .system-card:hover {
-      border-color: var(--fg);
-      transform: translateY(-2px);
-    }
-
-    .sys-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 0.75rem;
-      gap: 0.5rem;
-    }
-
-    .sys-title {
-      font-size: 1.15rem;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-    }
-
-    .sys-type {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.7rem;
-      color: var(--fg-muted);
-      white-space: nowrap;
-    }
-
-    .sys-body {
-      font-size: 0.88rem;
-      color: var(--fg-muted);
-      margin-bottom: 1.25rem;
-      line-height: 1.6;
-    }
-
-    .sys-body strong {
-      color: var(--fg);
-      font-weight: 600;
-    }
-
-    .sys-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-top: 1px solid var(--border);
-      padding-top: 0.9rem;
-      margin-top: auto;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    .link-icon-btn {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.78rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      color: var(--fg);
-      font-weight: 600;
-      border-bottom: 1px dashed var(--fg-muted);
-      padding-bottom: 1px;
-      transition: border 0.15s;
-    }
-
-    .link-icon-btn:hover {
-      border-bottom-style: solid;
-    }
-
-    /* ==========================================================================
-       EXPERIENCE TIMELINE
-       ========================================================================== */
-    .timeline-item {
-      border-left: 2px solid var(--border-bright);
-      padding-left: 1.5rem;
-      position: relative;
-      margin-bottom: 2rem;
-    }
-
-    .timeline-item::before {
-      content: "";
-      position: absolute;
-      left: -5px;
-      top: 6px;
-      width: 8px;
-      height: 8px;
-      background: var(--fg);
-    }
-
-    .timeline-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      flex-wrap: wrap;
-      margin-bottom: 0.35rem;
-      gap: 0.5rem;
-    }
-
-    .role-title {
-      font-size: 1.15rem;
-      font-weight: 700;
-    }
-
-    .company-name {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.82rem;
-      color: var(--fg-muted);
-      margin-bottom: 0.85rem;
-    }
-
-    /* ==========================================================================
-       INTERACTIVE TELEMETRY & GRAPH VISUALIZATION
-       ========================================================================== */
-    .telemetry-container {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      padding: 1.6rem;
-      overflow: visible;
-    }
-
-    .telemetry-tabs-wrapper {
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      margin-bottom: 1.5rem;
-      padding: 2px 0 10px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .telemetry-tabs {
-      display: flex;
-      gap: 0.6rem;
-      min-width: max-content;
-    }
-
-    .tel-tab {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--fg-muted);
-      padding: 0.5rem 0.95rem;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      cursor: pointer;
-      transition: all 0.15s;
-      white-space: nowrap;
-    }
-
-    .tel-tab.active {
-      background: var(--fg);
-      color: var(--accent-inverse);
-      border-color: var(--fg);
-      font-weight: 700;
-    }
-
-    .graph-card {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      padding: 1.35rem;
-    }
-
-    .graph-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-bottom: 1.25rem;
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    .graph-title {
-      font-size: 0.88rem;
-      font-weight: 700;
-      color: var(--fg);
-    }
-
-    .graph-caption {
-      font-size: 0.72rem;
-      color: var(--fg-muted);
-    }
-
-    .svg-container {
-      width: 100%;
-      height: auto;
-      aspect-ratio: 16 / 7;
-      min-height: 220px;
-    }
-
-    .chart-svg {
-      width: 100%;
-      height: 100%;
-      display: block;
-      overflow: visible;
-    }
-
-    .chart-grid {
-      stroke: var(--chart-grid);
-      stroke-width: 1;
-      stroke-dasharray: 2 3;
-    }
-
-    .chart-axis {
-      stroke: var(--chart-axis);
-      stroke-width: 1.2;
-    }
-
-    .chart-label {
-      fill: var(--fg-muted);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-    }
-
-    .stat-row-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1rem;
-      margin-top: 1.25rem;
-      margin-bottom: 1rem;
-    }
-
-    .stat-item {
-      border: 1px solid var(--border);
-      background: var(--bg);
-      padding: 0.85rem;
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    .stat-item-label {
-      font-size: 0.7rem;
-      color: var(--fg-muted);
-      text-transform: uppercase;
-      margin-bottom: 0.25rem;
-    }
-
-    .stat-item-val {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: var(--fg);
-    }
-
-    .stat-item-sub {
-      font-size: 0.72rem;
-      color: var(--fg-muted);
-    }
-
-    .log-terminal {
-      background: var(--code-bg);
-      padding: 0.85rem 1rem;
-      border: 1px solid var(--border);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      line-height: 1.55;
-      color: var(--fg);
-      overflow-x: auto;
-    }
-
-    /* ==========================================================================
-       TECHNICAL STACK TABLE
-       ========================================================================== */
-    .skills-wrapper {
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .skills-table {
-      width: 100%;
-      min-width: 500px;
-      border-collapse: collapse;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.82rem;
-    }
-
-    .skills-table tr {
-      border-bottom: 1px solid var(--border);
-    }
-
-    .skills-table td {
-      padding: 1.1rem 0.5rem;
-      vertical-align: top;
-    }
-
-    .skills-category {
-      font-weight: 700;
-      color: var(--fg);
-      width: 25%;
-      text-transform: uppercase;
-    }
-
-    .skills-items {
-      color: var(--fg-muted);
-      width: 75%;
-      line-height: 1.6;
-    }
-
-    .skills-items strong {
-      color: var(--fg);
-    }
-
-    /* ==========================================================================
-       FOOTER
-       ========================================================================== */
-    footer {
-      padding: 3.5rem 0;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.8rem;
-    }
-
-    .footer-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1.25rem;
-    }
-
-    .social-links {
-      display: flex;
-      gap: 1.25rem;
-      flex-wrap: wrap;
-    }
-
-    .social-links a {
-      color: var(--fg-muted);
-      transition: color 0.15s;
-    }
-    .social-links a:hover {
-      color: var(--fg);
-    }
-
-    /* ==========================================================================
-       MODAL
-       ========================================================================== */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.85);
-      z-index: 1000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 1.25rem;
-    }
-
-    .modal-overlay.open {
-      display: flex;
-    }
-
-    .modal-box {
-      background: var(--bg-card);
-      border: 1px solid var(--border-bright);
-      width: 100%;
-      max-width: 650px;
-      padding: 1.75rem;
-      position: relative;
-    }
-
-    .modal-close {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background: transparent;
-      border: none;
-      color: var(--fg);
-      cursor: pointer;
-      font-size: 1.3rem;
-    }
-
-    .modal-pre {
-      background: var(--code-bg);
-      padding: 1rem;
-      border: 1px solid var(--border);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.78rem;
-      color: var(--fg);
-      overflow-x: auto;
-      margin: 1rem 0;
-      line-height: 1.5;
-    }
-
-    /* ==========================================================================
-       MOBILE RESPONSIVE
-       ========================================================================== */
-    @media (max-width: 768px) {
-      html {
-        font-size: 14px;
-      }
-      .app-container {
-        padding: 0 1rem;
-      }
-      section {
-        padding: 3.5rem 0;
-      }
-      .hero {
-        padding-top: 2.5rem;
-        padding-bottom: 2.5rem;
-      }
-      .research-card {
-        padding: 1.25rem;
-      }
-      .systems-grid {
-        grid-template-columns: 1fr;
-      }
-      .system-card {
-        min-height: auto;
-        padding: 1.3rem;
-      }
-      .svg-container {
-        aspect-ratio: 16 / 9;
-        min-height: 240px;
-      }
-      .nav-links {
-        gap: 0.75rem;
-      }
-    }
-  </style>
 </head>
 <body>
 
-  <!-- Three.js 3D Wireframe Manifold -->
+  <div id="scrollProgress"></div>
   <div id="canvas-container"></div>
 
-  <!-- Main Container -->
   <div class="app-container">
 
-    <!-- ========================================================================
-         NAVIGATION
-         ======================================================================== -->
+    <!-- NAVIGATION -->
     <header class="top-nav">
       <div class="nav-inner">
         <a href="#" class="brand">AKSHAT BALYAN</a>
-
         <div class="nav-links">
           <a href="#research" class="nav-link">RESEARCH</a>
           <a href="#systems" class="nav-link">SYSTEMS</a>
           <a href="#telemetry" class="nav-link">BENCHMARKS</a>
-          <a href="#experience" class="nav-link">INDUSTRY</a>
+          <a href="#experience" class="nav-link">EXPERIENCE</a>
           <a href="#stack" class="nav-link">STACK</a>
-          <a href="https://drive.google.com/file/d/1kjuD4SBfDSL6tYcq6WB31uoaYle5150u/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="nav-link mono" style="font-weight: 700; color: var(--fg);">CV ↗</a>
+          <a href="Akshat_Balyan_Resume.pdf" target="_blank" rel="noopener noreferrer" class="nav-link mono" style="font-weight: 700; color: var(--fg);">CV ↗</a>
           <button id="themeToggle" class="theme-toggle-btn" title="Toggle Theme [T]">
             <i data-lucide="sun-moon" style="width: 13px; height: 13px;"></i>
             <span id="themeToggleText">INVERT</span>
@@ -884,33 +40,32 @@
       </div>
     </header>
 
-    <!-- ========================================================================
-         HERO SECTION
-         ======================================================================== -->
+    <!-- HERO -->
     <section class="hero" id="top">
-      <div class="hero-pretitle">DEEP LEARNING SYSTEMS & MECHANISTIC INTERPRETABILITY</div>
-      <h1 class="hero-name">AKSHAT BALYAN</h1>
+      <div class="status-pill"><span class="status-dot"></span> B.Tech CSE (AI&amp;ML) '27 · Open to roles</div>
+      <div class="hero-pretitle shiny">LLM TRAINING SYSTEMS · AI AGENTS · MECHANISTIC INTERPRETABILITY</div>
+      <h1 class="hero-name decrypt" data-text="AKSHAT BALYAN" data-speed="55">AKSHAT BALYAN</h1>
       <p class="hero-manifesto">
-        Investigating architectural inductive biases, extreme hardware capacity scaling, and high-throughput training economics.
-        <span>Specializing in mechanistic evaluation of low-parameter LLMs, optimizer routing (Muon + AdamW), and low-latency computer vision pipelines.</span>
+        I train language models from scratch on consumer hardware and build
+        <span class="rotator"><span class="word" data-words='["safety layers for AI agents","long-context DNA models","real-time vision pipelines","agentic SRE co-pilots"]'></span><span class="caret">▍</span></span>.
+        <span>From 60M-parameter architecture ablations and 1&nbsp;Mbp-context DNA models to safety layers for parallel coding agents and real-time computer vision in production.</span>
       </p>
 
-      <!-- Empirical Metrics Strip -->
       <div class="metrics-bar">
         <div class="metric-cell">
-          <div class="metric-val">24+</div>
-          <div class="metric-label">60M Models Trained Scratch</div>
+          <div class="metric-val"><span class="count-up" data-to="24">0</span></div>
+          <div class="metric-label">60M Models Trained From Scratch</div>
         </div>
         <div class="metric-cell">
-          <div class="metric-val">250+ hrs</div>
+          <div class="metric-val"><span class="count-up" data-to="250">0</span>+ hrs</div>
           <div class="metric-label">Controlled GPU Training</div>
         </div>
         <div class="metric-cell">
-          <div class="metric-val">1,940</div>
-          <div class="metric-label">Tok/s On 8GB Consumer GPU</div>
+          <div class="metric-val"><span class="count-up" data-to="1">0</span> Mbp</div>
+          <div class="metric-label">DNA Context In 5.6GB VRAM</div>
         </div>
         <div class="metric-cell">
-          <div class="metric-val">&lt;100ms</div>
+          <div class="metric-val">&lt;<span class="count-up" data-to="100">0</span>ms</div>
           <div class="metric-label">CV Multi-Stream Latency</div>
         </div>
       </div>
@@ -919,26 +74,25 @@
         <a href="https://drive.google.com/file/d/1wEVryBeWuXngwbkJm7FbSWL1sDKqeuFV/view" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
           <i data-lucide="file-text" style="width: 15px; height: 15px;"></i> READ PREPRINT (PDF)
         </a>
-        <a href="https://github.com/B4K2/codemind_study" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
-          <i data-lucide="github" style="width: 15px; height: 15px;"></i> RESEARCH REPO
+        <a href="https://github.com/B4K2" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+          <i data-lucide="code-xml" style="width: 15px; height: 15px;"></i> GITHUB
         </a>
-        <a href="https://drive.google.com/file/d/1kjuD4SBfDSL6tYcq6WB31uoaYle5150u/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+        <a href="Akshat_Balyan_Resume.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
           <i data-lucide="download" style="width: 15px; height: 15px;"></i> CURRICULUM VITAE
         </a>
       </div>
+
+      <div class="marquee" aria-hidden="true"><div class="marquee-track"><span>PyTorch</span><span>LLM Pre-training</span><span>Muon</span><span>MLA</span><span>MoE</span><span>Linear Attention</span><span>RAG</span><span>LangGraph</span><span>MCP</span><span>Google ADK</span><span>FastAPI</span><span>Django</span><span>Docker</span><span>Kubernetes</span><span>AWS</span><span>Qdrant</span><span>Neo4j</span><span>YOLOv8</span><span>Go</span><span>PyTorch</span><span>LLM Pre-training</span><span>Muon</span><span>MLA</span><span>MoE</span><span>Linear Attention</span><span>RAG</span><span>LangGraph</span><span>MCP</span><span>Google ADK</span><span>FastAPI</span><span>Django</span><span>Docker</span><span>Kubernetes</span><span>AWS</span><span>Qdrant</span><span>Neo4j</span><span>YOLOv8</span><span>Go</span></div></div>
     </section>
 
-    <!-- ========================================================================
-         [01] RESEARCH & PUBLICATIONS
-         ======================================================================== -->
+    <!-- [01] RESEARCH -->
     <section id="research">
       <div class="section-header">
         <div class="section-title">Research & Publications</div>
         <div class="section-num">[01 / 05]</div>
       </div>
 
-      <!-- Preprint: Mechanistic Study -->
-      <div class="research-card">
+      <div class="research-card spotlight reveal">
         <div class="card-top">
           <div>
             <span class="pub-badge">Preprint // Mechanistic Interpretability</span>
@@ -950,8 +104,8 @@
             <a href="https://drive.google.com/file/d/1wEVryBeWuXngwbkJm7FbSWL1sDKqeuFV/view" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="font-size: 0.78rem; padding: 0.35rem 0.75rem;">
               <i data-lucide="file-text" style="width: 13px; height: 13px;"></i> PDF ↗
             </a>
-            <a href="https://github.com/B4K2/codemind_study" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="font-size: 0.78rem; padding: 0.35rem 0.75rem;">
-              <i data-lucide="github" style="width: 13px; height: 13px;"></i> Code ↗
+            <a href="https://github.com/B4K2/codemind" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="font-size: 0.78rem; padding: 0.35rem 0.75rem;">
+              <i data-lucide="code-xml" style="width: 13px; height: 13px;"></i> Code ↗
             </a>
             <button onclick="openBibtex()" class="btn btn-secondary" style="font-size: 0.78rem; padding: 0.35rem 0.75rem;">
               <i data-lucide="quote" style="width: 13px; height: 13px;"></i> BibTeX
@@ -960,38 +114,60 @@
         </div>
 
         <p class="pub-desc">
-          Trained twenty-four ~60M parameter GPT-2 style models on 1B FineWeb-Edu tokens under a single-axis protocol to isolate why mechanisms designed for 7B–70B models break when compressed.
+          Faculty-advised team project. Trained twenty-four ~60M-parameter GPT-style models on 1B FineWeb-Edu tokens (250+ GPU hours) under a single-axis protocol comparing MHA/MQA/GQA/MLA, RoPE, MoE, and Muon vs. AdamW — isolating why mechanisms designed for 7B–70B models break when compressed.
         </p>
 
         <ul class="findings-list">
-          <li>
-            <strong>MLA Rank Bound (Prop. 3):</strong> Proved that MLA's deficit at r=64 (PPL 33.84) is rank saturation (6–8% of peak singular value at ceiling). Widening to r=256 recovered -1.94 PPL, and adding a decoupled-RoPE branch (M29) reached <strong>31.22 PPL</strong> at 2.7× lower KV cache than MHA.
-          </li>
-          <li>
-            <strong>Muon on GQA Operating Point (Prop. 1):</strong> Plain Muon on GQA yielded a null (32.10 → 32.09). Deriving shape-aware update scaling paired with retuned lr=0.01 (M28) unlocked <strong>31.08 PPL</strong> (-1.01 PPL gain).
-          </li>
-          <li>
-            <strong>KDA Finite-State Recall Bound (Prop. 2):</strong> Proved linear attention trades exact recall for fixed-size states; LAMBADA last-word recall collapsed to 0.116 while local grammar (BLiMP) remained top-tier at 0.782.
-          </li>
-          <li>
-            <strong>Perplexity ≠ Capability Divergence:</strong> Proved shared-expert MoE models (M14–M16) lead on downstream benchmarks (PIQA 0.608, ARC-Easy 0.485) despite worse single-corpus perplexity.
-          </li>
+          <li><strong>MLA Rank Bound (Prop. 3):</strong> MLA's deficit at r=64 (PPL 33.84) is rank saturation. Widening to r=256 recovered -1.94 PPL, and a decoupled-RoPE branch (M29) reached <strong>31.22 PPL</strong> at 2.7× lower KV cache than MHA.</li>
+          <li><strong>Muon on GQA (Prop. 1):</strong> Plain Muon on GQA was a null (32.10 → 32.09). Shape-aware update scaling with retuned lr=0.01 (M28) unlocked <strong>31.08 PPL</strong> (-1.01 PPL).</li>
+          <li><strong>KDA Finite-State Recall Bound (Prop. 2):</strong> Linear attention trades exact recall for fixed-size state; LAMBADA recall collapsed to 0.116 while BLiMP grammar stayed top-tier at 0.782.</li>
+          <li><strong>Perplexity ≠ Capability:</strong> Shared-expert MoE models (M14–M16) lead on downstream benchmarks (PIQA 0.608, ARC-Easy 0.485) despite worse perplexity.</li>
         </ul>
 
         <div class="tag-strip">
           <span class="tech-tag">PyTorch</span>
           <span class="tech-tag">Muon Optimizer</span>
-          <span class="tech-tag">MLA (Multi-Head Latent Attention)</span>
+          <span class="tech-tag">MLA</span>
           <span class="tech-tag">Kimi Delta Attention</span>
           <span class="tech-tag">MoE Routing</span>
           <span class="tech-tag">SVD Spectra</span>
         </div>
       </div>
+
+      <div class="research-card spotlight reveal">
+        <div class="card-top">
+          <div>
+            <span class="pub-badge">Research // Genomic Language Models</span>
+            <h2 class="pub-title">Mnemos-DNA: Long-Context DNA Language Model with K-mer Fast-Weight Memory</h2>
+          </div>
+          <div class="card-links">
+            <a href="https://github.com/B4K2/Mnemos-DNA" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="font-size: 0.78rem; padding: 0.35rem 0.75rem;">
+              <i data-lucide="code-xml" style="width: 13px; height: 13px;"></i> Code ↗
+            </a>
+          </div>
+        </div>
+
+        <p class="pub-desc">
+          Faculty-advised team project. Linear-attention (KDA) models scale to long DNA sequences but lose exact recall — the same finite-state bound found in the 60M study. Mnemos adds a k-mer fast-weight memory to restore it.
+        </p>
+
+        <ul class="findings-list">
+          <li><strong>Exact recall restored to 64&nbsp;kbp</strong> for only <strong>~3% extra parameters</strong>.</li>
+          <li><strong>1&nbsp;Mbp-context inference in 5.6&nbsp;GB VRAM</strong> on an 8&nbsp;GB laptop GPU.</li>
+          <li>Released weights on <strong>Hugging Face</strong> and a companion benchmark, <strong>recall-bench</strong>, on PyPI.</li>
+        </ul>
+
+        <div class="tag-strip">
+          <span class="tech-tag">PyTorch</span>
+          <span class="tech-tag">Linear Attention (KDA)</span>
+          <span class="tech-tag">Fast-Weight Memory</span>
+          <span class="tech-tag">Hugging Face</span>
+          <span class="tech-tag">PyPI</span>
+        </div>
+      </div>
     </section>
 
-    <!-- ========================================================================
-         [02] SYSTEMS & ARCHITECTURES (BALANCED 2X2 GRID)
-         ======================================================================== -->
+    <!-- [02] SYSTEMS -->
     <section id="systems">
       <div class="section-header">
         <div class="section-title">Systems & Architecture Engineering</div>
@@ -1000,37 +176,72 @@
 
       <div class="systems-grid">
 
-        <!-- 1. CodeMind-1B -->
-        <div class="system-card">
+        <div class="system-card featured spotlight reveal">
+          <div>
+            <div class="sys-head">
+              <span class="sys-title">Riftguard — Safety Layer for Parallel AI Coding Agents</span>
+              <span class="sys-type">PyPI Package</span>
+            </div>
+            <ul class="sys-points">
+              <li>Stops parallel <strong>Claude Code / Codex</strong> agents from silently contradicting each other: agents share architectural decisions over <strong>MCP</strong>, and a separate <strong>LLM judge</strong> flags real conflicts for the developer.</li>
+              <li>Records every agent tool call in a <strong>content-addressed store</strong> and checkpoints automatically before irreversible actions. Released on PyPI with CI via GitHub Actions.</li>
+            </ul>
+          </div>
+          <div class="sys-footer">
+            <span class="tech-tag">Python / MCP / SQLite</span>
+            <a href="https://github.com/B4K2/Riftguard" target="_blank" rel="noopener noreferrer" class="link-icon-btn">GitHub ↗</a>
+          </div>
+        </div>
+
+        <div class="system-card spotlight reveal">
+          <div>
+            <div class="sys-head">
+              <span class="sys-title">Aura — Agentic SRE Co-pilot</span>
+              <span class="sys-type">AI Agents</span>
+            </div>
+            <p class="sys-body">
+              Detects incidents, links them to recent deploys, recalls similar past incidents via <strong>Qdrant + Neo4j memory</strong>, and proposes fixes like rollbacks and restarts — with <strong>human approval</strong> required for anything destructive.
+              Ships a terminal UI, web dashboard, and failure-injection demo; runs on Docker Compose or <strong>Kubernetes</strong>.
+            </p>
+          </div>
+          <div class="sys-footer">
+            <span class="tech-tag">LangGraph / FastAPI / React / K8s</span>
+            <div style="display: flex; gap: 0.65rem;">
+              <a href="https://aure-agent.vercel.app" target="_blank" rel="noopener noreferrer" class="link-icon-btn">Live ↗</a>
+              <a href="https://github.com/B4K2/Aure-agent" target="_blank" rel="noopener noreferrer" class="link-icon-btn">GitHub ↗</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="system-card spotlight reveal">
           <div>
             <div class="sys-head">
               <span class="sys-title">CodeMind-1B Pipeline</span>
               <span class="sys-type">Tech Report</span>
             </div>
             <p class="sys-body">
-              Engineered a custom PyTorch training pipeline fusing DeepSeek's MLA and MoE (4 routed + 1 shared expert, ~1.5B total / ~400M active), Moonshot's AttnRes, and Multi-Token Prediction (MTP).
-              Trained on a <strong>$10 compute budget</strong> with local 8GB RTX 5060 smoke-testing via gradient checkpointing, chunked cross-entropy, and PyArrow data streaming (<strong>1,940 Tok/s</strong>).
+              Memory-efficient PyTorch pipeline (gradient checkpointing, chunked cross-entropy, hybrid <strong>Muon + AdamW</strong>) fusing MLA and MoE (~1.5B total / ~400M active) with Multi-Token Prediction.
+              Trains a 1.5B model on an <strong>8GB RTX 5060 at 1,940 tok/s</strong>; full run on a <strong>$10 compute budget</strong>.
             </p>
           </div>
           <div class="sys-footer">
             <span class="tech-tag">PyTorch / CUDA / MoE</span>
             <div style="display: flex; gap: 0.65rem;">
               <a href="https://drive.google.com/file/d/1B3-kJpsIFwLpN6HGsGm1XjRtUasw9Byk/view" target="_blank" rel="noopener noreferrer" class="link-icon-btn">Report ↗</a>
-              <a href="https://github.com/B4K2" target="_blank" rel="noopener noreferrer" class="link-icon-btn">Source ↗</a>
+              <a href="https://github.com/B4K2/codemind" target="_blank" rel="noopener noreferrer" class="link-icon-btn">GitHub ↗</a>
             </div>
           </div>
         </div>
 
-        <!-- 2. HackRx Zero-Cache RAG -->
-        <div class="system-card">
+        <div class="system-card spotlight reveal">
           <div>
             <div class="sys-head">
-              <span class="sys-title">HackRx Zero-Cache RAG</span>
-              <span class="sys-type">Top 35 Finalist</span>
+              <span class="sys-title">HackRx 6.0 Multi-Modal RAG</span>
+              <span class="sys-type">Top 35 / 10,000+</span>
             </div>
             <p class="sys-body">
-              Architected a <strong>zero-cache, multi-modal RAG API</strong> to dynamically parse and reason over massive, unseen documents (Constitution-scale PDFs) on the fly without pre-computed embeddings.
-              Deployed on <strong>AWS App Runner</strong> with automated CI/CD via GitHub Actions.
+              RAG API that answers questions over textbook- and legal-scale PDFs on the fly, <strong>without pre-computed embeddings</strong>. Combines AWS Titan and Gemini with token budgeting to keep latency low.
+              Containerized and deployed on <strong>AWS App Runner</strong> with CI/CD through GitHub Actions.
             </p>
           </div>
           <div class="sys-footer">
@@ -1039,38 +250,18 @@
           </div>
         </div>
 
-        <!-- 3. Player Re-ID -->
-        <div class="system-card">
+        <div class="system-card spotlight reveal">
           <div>
             <div class="sys-head">
-              <span class="sys-title">Spatial Player Re-ID</span>
-              <span class="sys-type">Computer Vision</span>
+              <span class="sys-title">WhatsApp AI Agent (MCP)</span>
+              <span class="sys-type">★ 11 · 4 Forks</span>
             </div>
             <p class="sys-body">
-              Multi-camera sports tracking engine using fine-tuned <strong>YOLOv8</strong> models for player detection and pitch segmentation.
-              Calculated real-time <strong>homography matrix transformations</strong> to project player coordinates onto a calibrated 2D virtual tactical coordinate map.
+              Autonomous WhatsApp agent built on Google ADK and the <strong>Model Context Protocol</strong>: a <strong>Go messaging bridge</strong> plus a <strong>Python MCP server</strong> exposing tools for multi-step tasks.
             </p>
           </div>
           <div class="sys-footer">
-            <span class="tech-tag">YOLOv8 / OpenCV / Homography</span>
-            <a href="https://github.com/B4K2/Re-Identification" target="_blank" rel="noopener noreferrer" class="link-icon-btn">GitHub ↗</a>
-          </div>
-        </div>
-
-        <!-- 4. WhatsApp MCP Agent -->
-        <div class="system-card">
-          <div>
-            <div class="sys-head">
-              <span class="sys-title">Autonomous MCP Agent</span>
-              <span class="sys-type">Agentic Systems</span>
-            </div>
-            <p class="sys-body">
-              Engineered an autonomous AI agent leveraging Google ADK and Anthropic's <strong>Model Context Protocol (MCP)</strong>.
-              Features a <strong>Go API bridge</strong> for socket communication and a <strong>Python MCP server</strong> exposing tools for multi-step agentic workflows.
-            </p>
-          </div>
-          <div class="sys-footer">
-            <span class="tech-tag">Go / Python / MCP</span>
+            <span class="tech-tag">Google ADK / Go / Python</span>
             <a href="https://github.com/B4K2/WhatsApp-agent" target="_blank" rel="noopener noreferrer" class="link-icon-btn">GitHub ↗</a>
           </div>
         </div>
@@ -1078,17 +269,14 @@
       </div>
     </section>
 
-    <!-- ========================================================================
-         [03] EMPIRICAL BENCHMARKS & TELEMETRY
-         ======================================================================== -->
+    <!-- [03] BENCHMARKS -->
     <section id="telemetry">
       <div class="section-header">
         <div class="section-title">Empirical Benchmarks & Training Telemetry</div>
         <div class="section-num">[03 / 05]</div>
       </div>
 
-      <div class="telemetry-container">
-        <!-- Tabs -->
+      <div class="telemetry-container reveal">
         <div class="telemetry-tabs-wrapper">
           <div class="telemetry-tabs">
             <button class="tel-tab active" onclick="showChart('muon', this)">FIG 16: MUON OPTIMIZER TUNING</button>
@@ -1097,76 +285,71 @@
             <button class="tel-tab" onclick="showChart('codemind', this)">CODEMIND-1B: CONVERGENCE & TOK/S</button>
           </div>
         </div>
-
-        <!-- Chart Panel -->
-        <div id="chart-panel">
-          <!-- Rendered via JS -->
-        </div>
+        <div id="chart-panel"></div>
       </div>
     </section>
 
-    <!-- ========================================================================
-         [04] INDUSTRY EXPERIENCE
-         ======================================================================== -->
+    <!-- [04] EXPERIENCE & EDUCATION -->
     <section id="experience">
       <div class="section-header">
-        <div class="section-title">Industry Deployment & Experience</div>
+        <div class="section-title">Experience & Education</div>
         <div class="section-num">[04 / 05]</div>
       </div>
 
-      <div class="timeline-item">
+      <div class="timeline-item reveal">
         <div class="timeline-header">
-          <div class="role-title">Software Engineer Intern (CV & Infrastructure)</div>
-          <div class="mono" style="font-size: 0.8rem; color: var(--fg-muted);">Oct 2025 – Present</div>
+          <div class="role-title">Software Engineer Intern</div>
+          <div class="mono" style="font-size: 0.8rem; color: var(--fg-muted);">Oct 2025 – Sep 2026</div>
         </div>
-        <div class="company-name">AMRR Techsols // Factory Video Stream Edge Deployment</div>
+        <div class="company-name">AMRR Techsols // Real-Time Computer Vision & Backend</div>
         <ul class="findings-list">
-          <li>
-            Developed end-to-end industrial computer vision pipelines for factory label legibility and burner inspection, processing <strong>3 synchronized camera streams at 30–60 FPS</strong> with sub-<strong>100ms inference latency</strong>.
-          </li>
-          <li>
-            Optimized edge inference loops for on-site deployment, eliminating dropped frames across 24/7 continuous video feeds.
-          </li>
-          <li>
-            Architected backend platform services utilizing <strong>FastAPI</strong> and <strong>Django</strong> for a financial and idea management system.
-          </li>
+          <li>Built and deployed real-time computer vision systems for factory label-legibility and burner inspection, processing <strong>3 synchronized camera streams at 30–60 FPS</strong> with <strong>&lt;100ms inference latency</strong>.</li>
+          <li>Optimized on-site inference pipelines to process continuous video streams without dropping frames.</li>
+          <li>Built backend services in <strong>FastAPI</strong> and <strong>Django</strong> for a client-facing platform, turning client requirements into modular, low-latency APIs.</li>
         </ul>
+      </div>
+
+      <div class="timeline-item reveal">
+        <div class="timeline-header">
+          <div class="role-title">B.Tech, Computer Science & Engineering (AI & ML)</div>
+          <div class="mono" style="font-size: 0.8rem; color: var(--fg-muted);">2023 – 2027</div>
+        </div>
+        <div class="company-name">Ajay Kumar Garg Engineering College, Ghaziabad</div>
       </div>
     </section>
 
-    <!-- ========================================================================
-         [05] TECHNICAL MATRIX
-         ======================================================================== -->
+    <!-- [05] STACK -->
     <section id="stack">
       <div class="section-header">
         <div class="section-title">Technical Matrix & Honors</div>
         <div class="section-num">[05 / 05]</div>
       </div>
 
-      <div class="skills-wrapper">
+      <div class="skills-wrapper reveal">
         <table class="skills-table">
           <tbody>
             <tr>
+              <td class="skills-category">AI / ML</td>
+              <td class="skills-items"><strong>PyTorch</strong>, Hugging Face, LLM training &amp; fine-tuning, RAG, AI agents (<strong>LangGraph, MCP, Google ADK</strong>), MoE, MLA, RoPE, Muon, YOLOv8</td>
+            </tr>
+            <tr>
+              <td class="skills-category">Backend & Cloud</td>
+              <td class="skills-items"><strong>FastAPI</strong>, <strong>Django</strong>, REST APIs, Docker, <strong>Kubernetes</strong>, AWS (App Runner, ECR, EC2), GitHub Actions</td>
+            </tr>
+            <tr>
+              <td class="skills-category">Data</td>
+              <td class="skills-items">PostgreSQL, SQLite, <strong>Qdrant</strong>, <strong>Neo4j</strong>, Pinecone, ChromaDB, PyArrow</td>
+            </tr>
+            <tr>
               <td class="skills-category">Languages</td>
-              <td class="skills-items"><strong>Python</strong>, <strong>Go (Golang)</strong>, <strong>C++</strong>, SQL, Java, JavaScript (ES6+), LaTeX</td>
-            </tr>
-            <tr>
-              <td class="skills-category">ML Systems</td>
-              <td class="skills-items"><strong>PyTorch</strong>, TensorFlow, Muon Optimizer, Multi-Head Latent Attention (MLA), RoPE, Mixture-of-Experts (MoE), YOLOv8, FlashAttention, Zero-Cache RAG</td>
-            </tr>
-            <tr>
-              <td class="skills-category">Backend & Data</td>
-              <td class="skills-items"><strong>FastAPI</strong>, <strong>Django</strong>, Flask, PostgreSQL, SQLite, PyArrow, Pinecone, ChromaDB</td>
-            </tr>
-            <tr>
-              <td class="skills-category">Infra & Cloud</td>
-              <td class="skills-items"><strong>AWS (App Runner, ECR)</strong>, Docker, GitHub Actions CI/CD, Linux Profiling, CUDA Acceleration</td>
+              <td class="skills-items"><strong>Python</strong>, <strong>Go</strong>, SQL, JavaScript / TypeScript</td>
             </tr>
             <tr>
               <td class="skills-category">Honors</td>
               <td class="skills-items">
-                • <strong>Top 35 Finalist — Bajaj Finserv HackRx 6.0:</strong> Ranked top 35 out of 10,000+ national teams.<br>
-                • <strong>Competitive Programming:</strong> 3-Star on CodeChef.
+                • <strong>Top 35 Finalist — Bajaj Finserv HackRx 6.0</strong> (10,000+ teams)<br>
+                • <strong>3-Star</strong> on CodeChef<br>
+                • <strong>NVIDIA DLI:</strong> Fundamentals of Deep Learning
               </td>
             </tr>
           </tbody>
@@ -1174,29 +357,22 @@
       </div>
     </section>
 
-    <!-- ========================================================================
-         FOOTER
-         ======================================================================== -->
+    <!-- FOOTER -->
     <footer>
       <div class="footer-content">
-        <div style="font-weight: 700; text-transform: uppercase;">
-          AKSHAT BALYAN // RESEARCH & SYSTEMS
-        </div>
-
+        <div style="font-weight: 700; text-transform: uppercase;">AKSHAT BALYAN // RESEARCH & SYSTEMS</div>
         <div class="social-links mono">
           <a href="mailto:akshat_balyan@outlook.com">akshat_balyan@outlook.com</a>
           <a href="https://github.com/B4K2" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
           <a href="https://www.linkedin.com/in/akshat-balyan" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
-          <a href="https://drive.google.com/file/d/1kjuD4SBfDSL6tYcq6WB31uoaYle5150u/view?usp=sharing" target="_blank" rel="noopener noreferrer" style="font-weight: 700; color: var(--fg);">Resume PDF ↗</a>
+          <a href="Akshat_Balyan_Resume.pdf" target="_blank" rel="noopener noreferrer" style="font-weight: 700; color: var(--fg);">Resume PDF ↗</a>
         </div>
       </div>
     </footer>
 
   </div>
 
-  <!-- ========================================================================
-       BIBTEX CITATION MODAL
-       ======================================================================== -->
+  <!-- BIBTEX MODAL -->
   <div id="bibtexModal" class="modal-overlay" onclick="closeBibtex(event)">
     <div class="modal-box" onclick="event.stopPropagation()">
       <button class="modal-close" onclick="closeBibtex()">&times;</button>
@@ -1215,469 +391,7 @@
     </div>
   </div>
 
-  <!-- ========================================================================
-       SCRIPTS: THREE.JS, GRAPH ENGINE, THEME TOGGLER
-       ======================================================================== -->
-  <script>
-    lucide.createIcons();
-
-    /* --------------------------------------------------------------------------
-       1. THEME TOGGLE
-       -------------------------------------------------------------------------- */
-    const root = document.documentElement;
-    const themeBtn = document.getElementById('themeToggle');
-    const themeText = document.getElementById('themeToggleText');
-
-    function applyTheme(theme) {
-      root.setAttribute('data-theme', theme);
-      localStorage.setItem('portfolio-theme', theme);
-      themeText.textContent = theme === 'dark' ? 'INVERT' : 'REVERT';
-      if (window.updateThreeTheme) {
-        window.updateThreeTheme(theme);
-      }
-      if (window.currentChartKey) {
-        renderChart(window.currentChartKey);
-      }
-    }
-
-    const savedTheme = localStorage.getItem('portfolio-theme') || 
-      (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-    applyTheme(savedTheme);
-
-    themeBtn.addEventListener('click', () => {
-      const current = root.getAttribute('data-theme');
-      applyTheme(current === 'dark' ? 'light' : 'dark');
-    });
-
-    window.addEventListener('keydown', (e) => {
-      if ((e.key === 't' || e.key === 'T') && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
-        const current = root.getAttribute('data-theme');
-        applyTheme(current === 'dark' ? 'light' : 'dark');
-      }
-    });
-
-    /* --------------------------------------------------------------------------
-       2. THREE.JS 3D WIREFRAME MANIFOLD
-       -------------------------------------------------------------------------- */
-    (function initThreeBackground() {
-      const container = document.getElementById('canvas-container');
-      const scene = new THREE.Scene();
-
-      const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
-      camera.position.set(0, 20, 36);
-      camera.lookAt(0, 0, 0);
-
-      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      container.appendChild(renderer.domElement);
-
-      const xSize = 50, zSize = 50, segments = 38;
-      const geometry = new THREE.PlaneGeometry(xSize, zSize, segments, segments);
-      geometry.rotateX(-Math.PI / 2);
-
-      const pos = geometry.attributes.position;
-      for (let i = 0; i < pos.count; i++) {
-        const x = pos.getX(i);
-        const z = pos.getZ(i);
-        const y = Math.sin(x * 0.25) * Math.cos(z * 0.25) * 3.2 + Math.sin(Math.sqrt(x*x + z*z) * 0.3) * 1.5;
-        pos.setY(i, y);
-      }
-      geometry.computeVertexNormals();
-
-      let isDark = root.getAttribute('data-theme') === 'dark';
-      const wireframeMat = new THREE.MeshBasicMaterial({
-        color: isDark ? 0x282828 : 0xd8d8d8,
-        wireframe: true,
-        transparent: true,
-        opacity: 0.6
-      });
-      const mesh = new THREE.Mesh(geometry, wireframeMat);
-      scene.add(mesh);
-
-      const pointsMat = new THREE.PointsMaterial({
-        color: isDark ? 0x666666 : 0x444444,
-        size: 0.11,
-        transparent: true,
-        opacity: 0.7
-      });
-      const points = new THREE.Points(geometry, pointsMat);
-      scene.add(points);
-
-      let mouseX = 0, mouseY = 0;
-      window.addEventListener('mousemove', (e) => {
-        mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-        mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-      });
-
-      window.updateThreeTheme = function(theme) {
-        const dark = theme === 'dark';
-        wireframeMat.color.setHex(dark ? 0x282828 : 0xd8d8d8);
-        pointsMat.color.setHex(dark ? 0x666666 : 0x444444);
-      };
-
-      let clock = new THREE.Clock();
-      function animate() {
-        requestAnimationFrame(animate);
-        const elapsed = clock.getElapsedTime();
-
-        const positions = geometry.attributes.position;
-        for (let i = 0; i < positions.count; i++) {
-          const x = positions.getX(i);
-          const z = positions.getZ(i);
-          const y = Math.sin(x * 0.25 + elapsed * 0.35) * Math.cos(z * 0.25 + elapsed * 0.25) * 2.8 
-                  + Math.sin(Math.sqrt(x*x + z*z) * 0.3 - elapsed * 0.45) * 1.3;
-          positions.setY(i, y);
-        }
-        positions.needsUpdate = true;
-
-        mesh.rotation.y += (mouseX * 0.18 - mesh.rotation.y) * 0.03;
-        mesh.rotation.x += (mouseY * 0.1 - mesh.rotation.x) * 0.03;
-        points.rotation.y = mesh.rotation.y;
-        points.rotation.x = mesh.rotation.x;
-
-        renderer.render(scene, camera);
-      }
-      animate();
-
-      window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-      });
-    })();
-
-    /* --------------------------------------------------------------------------
-       3. EXPANDED VECTOR SVG CHARTS
-       -------------------------------------------------------------------------- */
-    window.currentChartKey = 'muon';
-
-    function showChart(key, el) {
-      document.querySelectorAll('.tel-tab').forEach(t => t.classList.remove('active'));
-      if (el) el.classList.add('active');
-      window.currentChartKey = key;
-      renderChart(key);
-    }
-
-    function renderChart(key) {
-      const container = document.getElementById('chart-panel');
-      const isDark = root.getAttribute('data-theme') === 'dark';
-
-      const cMain = isDark ? '#ffffff' : '#000000';
-      const cMuted = isDark ? '#666666' : '#999999';
-      const cLight = isDark ? '#383838' : '#cccccc';
-
-      if (key === 'muon') {
-        container.innerHTML = `
-          <div class="graph-card">
-            <div class="graph-header">
-              <span class="graph-title">FIGURE 16: VAL-LOSS TAIL — MUON VS ADAMW (STEPS 7K–15.2K)</span>
-              <span class="graph-caption">FineWeb-Edu 1B Tokens // Single-Axis Ablation</span>
-            </div>
-
-            <div class="svg-container">
-              <svg viewBox="0 0 760 280" class="chart-svg" preserveAspectRatio="xMidYMid meet">
-                <!-- Grid Lines -->
-                <line x1="60" y1="40" x2="520" y2="40" class="chart-grid" />
-                <line x1="60" y1="90" x2="520" y2="90" class="chart-grid" />
-                <line x1="60" y1="140" x2="520" y2="140" class="chart-grid" />
-                <line x1="60" y1="190" x2="520" y2="190" class="chart-grid" />
-                <line x1="60" y1="240" x2="520" y2="240" class="chart-grid" />
-
-                <!-- Axes -->
-                <line x1="60" y1="240" x2="520" y2="240" class="chart-axis" />
-                <line x1="60" y1="30" x2="60" y2="240" class="chart-axis" />
-
-                <!-- Y-Labels -->
-                <text x="50" y="44" class="chart-label" text-anchor="end">3.60</text>
-                <text x="50" y="94" class="chart-label" text-anchor="end">3.55</text>
-                <text x="50" y="144" class="chart-label" text-anchor="end">3.50</text>
-                <text x="50" y="194" class="chart-label" text-anchor="end">3.45</text>
-                <text x="50" y="244" class="chart-label" text-anchor="end">3.40</text>
-
-                <!-- X-Labels -->
-                <text x="60" y="258" class="chart-label" text-anchor="middle">7k</text>
-                <text x="175" y="258" class="chart-label" text-anchor="middle">9k</text>
-                <text x="290" y="258" class="chart-label" text-anchor="middle">11k</text>
-                <text x="405" y="258" class="chart-label" text-anchor="middle">13k</text>
-                <text x="520" y="258" class="chart-label" text-anchor="middle">15.2k</text>
-
-                <!-- M21: GQA+Muon-v2 lr=0.02 (Dashed line) -->
-                <path d="M 60,65 Q 200,90 350,110 T 520,122" fill="none" stroke="${cMuted}" stroke-width="1.8" stroke-dasharray="4 3" />
-                <text x="530" y="125" class="chart-label" text-anchor="start">M21 (lr 0.02, 32.57 PPL)</text>
-
-                <!-- M08 / M12: GQA+AdamW & plain Muon (Solid Light line) -->
-                <path d="M 60,78 Q 200,115 350,135 T 520,152" fill="none" stroke="${cLight}" stroke-width="2" />
-                <text x="530" y="155" class="chart-label" text-anchor="start">M08 / M12 (32.10 PPL)</text>
-
-                <!-- M28: GQA+Muon-v2 RETUNED lr=0.01 (Bold Solid line) -->
-                <path d="M 60,95 Q 200,140 350,175 T 520,195" fill="none" stroke="${cMain}" stroke-width="2.5" />
-                <text x="530" y="198" class="chart-label" text-anchor="start" style="font-weight:700; fill:${cMain};">M28 (lr 0.01, 31.08 PPL) ★</text>
-
-                <!-- M11: MHA+RoPE+Muon (Dotted line) -->
-                <path d="M 60,115 Q 200,165 350,205 T 520,225" fill="none" stroke="${cMain}" stroke-width="1.8" stroke-dasharray="2 2" />
-                <text x="530" y="228" class="chart-label" text-anchor="start">M11 (MHA+Muon, 30.54 PPL)</text>
-              </svg>
-            </div>
-
-            <div class="stat-row-grid">
-              <div class="stat-item">
-                <div class="stat-item-label">MHA+Muon Gain (M11)</div>
-                <div class="stat-item-val">-0.73 PPL</div>
-                <div class="stat-item-sub">31.27 → 30.54 PPL</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-item-label">GQA Muon-v2 Retuned (M28)</div>
-                <div class="stat-item-val">-1.01 PPL</div>
-                <div class="stat-item-sub">32.09 → 31.08 PPL (lr=0.01)</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-item-label">Sign-Flip Finding</div>
-                <div class="stat-item-val">2-Knob Package</div>
-                <div class="stat-item-sub">Shape scaling + step size</div>
-              </div>
-            </div>
-
-            <div class="log-terminal">
-              [PROPOSITION 1 VALIDATION] Correcting Muon update scaling for non-square 4:1 projections at untuned lr=0.02 caused regression (32.57 PPL). Halving muon_lr to 0.01 (M28) produced -1.01 PPL gain, proving shape correction and step size must move together.
-            </div>
-          </div>
-        `;
-      } else if (key === 'mla') {
-        container.innerHTML = `
-          <div class="graph-card">
-            <div class="graph-header">
-              <span class="graph-title">FIGURE 11 & 12: MLA LATENT CAPACITY VS. KV-CACHE COMPRESSION</span>
-              <span class="graph-caption">Proposition 3 Direct Test // Rank 64 → Rank 256 → Decoupled RoPE</span>
-            </div>
-
-            <div class="svg-container">
-              <svg viewBox="0 0 760 280" class="chart-svg" preserveAspectRatio="xMidYMid meet">
-                <!-- Axes -->
-                <line x1="70" y1="230" x2="710" y2="230" class="chart-axis" />
-                <line x1="70" y1="30" x2="70" y2="230" class="chart-axis" />
-
-                <!-- Grid -->
-                <line x1="70" y1="70" x2="710" y2="70" class="chart-grid" />
-                <line x1="70" y1="120" x2="710" y2="120" class="chart-grid" />
-                <line x1="70" y1="170" x2="710" y2="170" class="chart-grid" />
-
-                <!-- Y-Labels -->
-                <text x="60" y="74" class="chart-label" text-anchor="end">38.0</text>
-                <text x="60" y="124" class="chart-label" text-anchor="end">35.0</text>
-                <text x="60" y="174" class="chart-label" text-anchor="end">32.0</text>
-                <text x="60" y="224" class="chart-label" text-anchor="end">30.0</text>
-
-                <!-- Bars -->
-                <rect x="110" y="66" width="70" height="164" fill="${cMuted}" />
-                <text x="145" y="58" class="chart-label" text-anchor="middle">38.28</text>
-                <text x="145" y="248" class="chart-label" text-anchor="middle">M05 (r=64)</text>
-
-                <rect x="240" y="139" width="70" height="91" fill="${cMuted}" />
-                <text x="275" y="131" class="chart-label" text-anchor="middle">33.84</text>
-                <text x="275" y="248" class="chart-label" text-anchor="middle">M09 (+RoPE)</text>
-
-                <rect x="370" y="171" width="70" height="59" fill="${cLight}" stroke="${cMain}" stroke-width="1.5" />
-                <text x="405" y="163" class="chart-label" text-anchor="middle">-1.94 ↓</text>
-                <text x="405" y="248" class="chart-label" text-anchor="middle">M20 (r=256)</text>
-
-                <rect x="500" y="183" width="70" height="47" fill="${cMain}" />
-                <text x="535" y="175" class="chart-label" text-anchor="middle" style="font-weight:700; fill:${cMain};">31.22 ★</text>
-                <text x="535" y="248" class="chart-label" text-anchor="middle" style="font-weight:700;">M29 (Decoupled)</text>
-
-                <!-- GQA Baseline -->
-                <line x1="70" y1="168" x2="710" y2="168" stroke="${cMain}" stroke-width="1.5" stroke-dasharray="3 3" />
-                <text x="705" y="163" class="chart-label" text-anchor="end">GQA Baseline: 32.10 PPL</text>
-              </svg>
-            </div>
-
-            <div class="stat-row-grid">
-              <div class="stat-item">
-                <div class="stat-item-label">Latent Capacity Recovery</div>
-                <div class="stat-item-val">-1.94 PPL</div>
-                <div class="stat-item-sub">r=64 (33.84) → r=256 (31.90)</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-item-label">Decoupled RoPE Branch</div>
-                <div class="stat-item-val">31.22 PPL</div>
-                <div class="stat-item-sub">Beats GQA at 384 cached dims</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-item-label">KV-Cache Footprint</div>
-                <div class="stat-item-val">2.7× Smaller</div>
-                <div class="stat-item-sub">384 vs 1024 dims/token of MHA</div>
-              </div>
-            </div>
-
-            <div class="log-terminal">
-              [PROPOSITION 3 VALIDATION] At r=64, composite key/value map is bounded at 6-8% of peak singular value at ceiling (rank-saturation). Widening to r=256 lowers trailing singular values to ~0.5% of peak, eliminating the capacity bottleneck.
-            </div>
-          </div>
-        `;
-      } else if (key === 'kda') {
-        container.innerHTML = `
-          <div class="graph-card">
-            <div class="graph-header">
-              <span class="graph-title">FIGURE 17 & 23: PROPOSITION 2 — KDA RECALL DISSOCIATION</span>
-              <span class="graph-caption">Kimi Delta Attention (M19) vs Softmax Baselines (M11, M06, M10)</span>
-            </div>
-
-            <div class="svg-container">
-              <svg viewBox="0 0 760 280" class="chart-svg" preserveAspectRatio="xMidYMid meet">
-                <!-- Subplot 1: LAMBADA Recall -->
-                <line x1="50" y1="230" x2="330" y2="230" class="chart-axis" />
-                <line x1="50" y1="40" x2="50" y2="230" class="chart-axis" />
-                <text x="190" y="30" class="chart-label" text-anchor="middle" style="font-weight:700; fill:${cMain};">LAMBADA (Exact Recall)</text>
-
-                <rect x="75" y="86" width="55" height="144" fill="${cLight}" />
-                <text x="102" y="78" class="chart-label" text-anchor="middle">.180</text>
-                <text x="102" y="248" class="chart-label" text-anchor="middle">M11</text>
-
-                <rect x="150" y="74" width="55" height="156" fill="${cLight}" />
-                <text x="177" y="66" class="chart-label" text-anchor="middle">.196</text>
-                <text x="177" y="248" class="chart-label" text-anchor="middle">M10</text>
-
-                <rect x="225" y="137" width="55" height="93" fill="${cMain}" />
-                <text x="252" y="129" class="chart-label" text-anchor="middle" style="font-weight:700; fill:${cMain};">.116 ↓</text>
-                <text x="252" y="248" class="chart-label" text-anchor="middle" style="font-weight:700;">M19 (KDA)</text>
-
-                <!-- Subplot 2: BLiMP Grammar -->
-                <line x1="410" y1="230" x2="690" y2="230" class="chart-axis" />
-                <line x1="410" y1="40" x2="410" y2="230" class="chart-axis" />
-                <text x="550" y="30" class="chart-label" text-anchor="middle" style="font-weight:700; fill:${cMain};">BLiMP (Local Grammar)</text>
-
-                <rect x="435" y="60" width="55" height="170" fill="${cLight}" />
-                <text x="462" y="52" class="chart-label" text-anchor="middle">.772</text>
-                <text x="462" y="248" class="chart-label" text-anchor="middle">M11</text>
-
-                <rect x="510" y="53" width="55" height="177" fill="${cLight}" />
-                <text x="537" y="45" class="chart-label" text-anchor="middle">.781</text>
-                <text x="537" y="248" class="chart-label" text-anchor="middle">M10</text>
-
-                <rect x="585" y="52" width="55" height="178" fill="${cMain}" />
-                <text x="612" y="44" class="chart-label" text-anchor="middle" style="font-weight:700; fill:${cMain};">.782 ★</text>
-                <text x="612" y="248" class="chart-label" text-anchor="middle" style="font-weight:700;">M19 (KDA)</text>
-              </svg>
-            </div>
-
-            <div class="stat-row-grid">
-              <div class="stat-item">
-                <div class="stat-item-label">LAMBADA Accuracy</div>
-                <div class="stat-item-val">0.116 (Worst)</div>
-                <div class="stat-item-sub">Finite-state bottleneck (Prop 2)</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-item-label">BLiMP Grammar Accuracy</div>
-                <div class="stat-item-val">0.782 (Top-Tier)</div>
-                <div class="stat-item-sub">Beats standard softmax runs</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-item-label">Memory Complexity</div>
-                <div class="stat-item-val">O(1) Fixed State</div>
-                <div class="stat-item-sub">No growing K/V cache buffer</div>
-              </div>
-            </div>
-
-            <div class="log-terminal">
-              [PROPOSITION 2 VALIDATION] KDA's fixed d×d state factors associative retrieval through a d² bottleneck. Once stored keys exceed head dim d=64, exact recall suffers while local grammatical syntax remains completely intact.
-            </div>
-          </div>
-        `;
-      } else if (key === 'codemind') {
-        container.innerHTML = `
-          <div class="graph-card">
-            <div class="graph-header">
-              <span class="graph-title">CODEMIND-1B: PRE-TRAINING CONVERGENCE (147M TOKENS / $10 RUN)</span>
-              <span class="graph-caption">PyTorch Vectorized Pipeline // 8GB RTX 5060 Smoke-Tested → A40 Cloud</span>
-            </div>
-
-            <div class="svg-container">
-              <svg viewBox="0 0 760 280" class="chart-svg" preserveAspectRatio="xMidYMid meet">
-                <!-- Axes -->
-                <line x1="60" y1="230" x2="680" y2="230" class="chart-axis" />
-                <line x1="60" y1="30" x2="60" y2="230" class="chart-axis" />
-
-                <!-- Grid -->
-                <line x1="60" y1="50" x2="680" y2="50" class="chart-grid" />
-                <line x1="60" y1="100" x2="680" y2="100" class="chart-grid" />
-                <line x1="60" y1="150" x2="680" y2="150" class="chart-grid" />
-                <line x1="60" y1="200" x2="680" y2="200" class="chart-grid" />
-
-                <!-- Y-Labels -->
-                <text x="50" y="54" class="chart-label" text-anchor="end">10.5</text>
-                <text x="50" y="104" class="chart-label" text-anchor="end">8.0</text>
-                <text x="50" y="154" class="chart-label" text-anchor="end">6.0</text>
-                <text x="50" y="204" class="chart-label" text-anchor="end">4.0</text>
-
-                <!-- X-Labels -->
-                <text x="60" y="248" class="chart-label" text-anchor="middle">0M</text>
-                <text x="215" y="248" class="chart-label" text-anchor="middle">40M</text>
-                <text x="370" y="248" class="chart-label" text-anchor="middle">80M</text>
-                <text x="525" y="248" class="chart-label" text-anchor="middle">120M</text>
-                <text x="680" y="248" class="chart-label" text-anchor="middle">147M</text>
-
-                <!-- Loss Curve -->
-                <path d="M 60,50 Q 110,160 215,185 T 450,198 T 680,204" fill="none" stroke="${cMain}" stroke-width="2.5" />
-                <text x="685" y="207" class="chart-label" text-anchor="start" style="font-weight:700; fill:${cMain};">Loss: ~4.0</text>
-
-                <!-- MoE lb_loss -->
-                <path d="M 60,225 Q 150,220 300,222 T 680,221" fill="none" stroke="${cMuted}" stroke-width="1.8" stroke-dasharray="3 3" />
-                <text x="685" y="224" class="chart-label" text-anchor="start">lb_loss: 0.37</text>
-              </svg>
-            </div>
-
-            <div class="stat-row-grid">
-              <div class="stat-item">
-                <div class="stat-item-label">Sustained Throughput</div>
-                <div class="stat-item-val">1,940 Tok/s</div>
-                <div class="stat-item-sub">PyArrow streaming + C-CE</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-item-label">Gradient Stability</div>
-                <div class="stat-item-val">[1.0, 5.0]</div>
-                <div class="stat-item-sub">Bounded grad norm under Muon</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-item-label">MoE Routing Health</div>
-                <div class="stat-item-val">H = 0.99</div>
-                <div class="stat-item-sub">Zero expert collapse (lb_loss ~0.37)</div>
-              </div>
-            </div>
-
-            <div class="log-terminal">
-              [SYSTEM PERFORMANCE LOG] Phase-1 model trained across 3 continuous checkpointed runs on NVIDIA A40 (48GB) for 21 hours ($10 budget). Muon momentum state-dict loading perfectly preserved orthogonal buffers without loss spikes.
-            </div>
-          </div>
-        `;
-      }
-    }
-
-    renderChart('muon');
-
-    /* --------------------------------------------------------------------------
-       4. BIBTEX ACTIONS
-       -------------------------------------------------------------------------- */
-    const bibModal = document.getElementById('bibtexModal');
-    function openBibtex() {
-      bibModal.classList.add('open');
-    }
-    function closeBibtex(e) {
-      if (!e || e.target === bibModal || e.target.classList.contains('modal-close')) {
-        bibModal.classList.remove('open');
-      }
-    }
-    function copyBibtex() {
-      const text = document.getElementById('bibtexContent').innerText;
-      navigator.clipboard.writeText(text).then(() => {
-        const btn = document.getElementById('copyBibBtn');
-        btn.innerHTML = '<i data-lucide="check" style="width:14px;height:14px;"></i> COPIED TO CLIPBOARD';
-        lucide.createIcons();
-        setTimeout(() => {
-          btn.innerHTML = '<i data-lucide="copy" style="width:14px;height:14px;"></i> COPY TO CLIPBOARD';
-          lucide.createIcons();
-        }, 2000);
-      });
-    }
-  </script>
+  <script src="js/main.js"></script>
+  <script src="js/effects.js"></script>
 </body>
 </html>
