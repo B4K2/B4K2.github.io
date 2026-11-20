@@ -137,10 +137,13 @@
       <div class="research-card spotlight reveal">
         <div class="card-top">
           <div>
-            <span class="pub-badge">Research // Genomic Language Models</span>
+            <span class="pub-badge">Paper // Genomic Language Models</span>
             <h2 class="pub-title">Mnemos-DNA: Long-Context DNA Language Model with K-mer Fast-Weight Memory</h2>
           </div>
           <div class="card-links">
+            <a href="https://drive.google.com/file/d/1IxDG3scj-HPP8pvAHBbWF6FtCAT5ITTg/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="font-size: 0.78rem; padding: 0.35rem 0.75rem;">
+              <i data-lucide="file-text" style="width: 13px; height: 13px;"></i> PDF ↗
+            </a>
             <a href="https://github.com/B4K2/Mnemos-DNA" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="font-size: 0.78rem; padding: 0.35rem 0.75rem;">
               <i data-lucide="code-xml" style="width: 13px; height: 13px;"></i> Code ↗
             </a>
@@ -275,17 +278,24 @@
     <!-- [03] BENCHMARKS -->
     <section id="telemetry">
       <div class="section-header">
-        <div class="section-title">Empirical Benchmarks & Training Telemetry</div>
+        <div class="section-title">Experiment Results, Explained</div>
         <div class="section-num">[03 / 05]</div>
       </div>
+
+      <p class="section-intro reveal">
+        Results from the 60M-parameter study above. Every model is identical except for <strong>one</strong> change
+        (attention type, optimizer, etc.), so any difference in score comes from that change alone.
+        Scores are mostly <strong>perplexity (PPL)</strong> — how surprised the model is by unseen text; <strong>lower is better</strong>.
+        Pick a tab to see one experiment.
+      </p>
 
       <div class="telemetry-container reveal">
         <div class="telemetry-tabs-wrapper">
           <div class="telemetry-tabs">
-            <button class="tel-tab active" onclick="showChart('muon', this)">FIG 16: MUON OPTIMIZER TUNING</button>
-            <button class="tel-tab" onclick="showChart('mla', this)">FIG 11 & 12: MLA CAPACITY & KV FOOTPRINT</button>
-            <button class="tel-tab" onclick="showChart('kda', this)">FIG 17: KDA RECALL VS GRAMMAR</button>
-            <button class="tel-tab" onclick="showChart('codemind', this)">CODEMIND-1B: CONVERGENCE & TOK/S</button>
+            <button class="tel-tab active" onclick="showChart('muon', this)">01 · DOES MUON HELP SMALL MODELS?</button>
+            <button class="tel-tab" onclick="showChart('mla', this)">02 · FIXING MLA AT SMALL SCALE</button>
+            <button class="tel-tab" onclick="showChart('kda', this)">03 · WHAT LINEAR ATTENTION FORGETS</button>
+            <button class="tel-tab" onclick="showChart('codemind', this)">04 · 1.5B MODEL ON $10</button>
           </div>
         </div>
         <div id="chart-panel"></div>

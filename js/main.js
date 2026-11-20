@@ -429,7 +429,41 @@ function renderChart(key) {
       </div>
     `;
   }
+
+  /* Plain-English context injected under each chart header */
+  const ex = CHART_CONTEXT[key];
+  if (ex) {
+    container.querySelector('.graph-header').insertAdjacentHTML('afterend', `
+      <div class="chart-context">
+        <div><span class="ctx-label">THE QUESTION</span><p>${ex.q}</p></div>
+        <div><span class="ctx-label">HOW TO READ IT</span><p>${ex.read}</p></div>
+        <div><span class="ctx-label">TAKEAWAY</span><p>${ex.take}</p></div>
+      </div>`);
+  }
 }
+
+const CHART_CONTEXT = {
+  muon: {
+    q: 'Muon is a newer optimizer that beats AdamW on large models. Does it still help a small 60M model that shares key/value heads (GQA)?',
+    read: 'Validation loss over the last half of training — <strong>lower is better</strong>. Each line is one model; PPL (perplexity) in the label is the final score, also lower = better.',
+    take: 'Swapping in Muon alone did nothing for GQA. It only helped (−1.01 PPL) once its update size was corrected for GQA\'s non-square matrices <em>and</em> the learning rate was halved — both knobs had to move together.'
+  },
+  mla: {
+    q: 'MLA (DeepSeek\'s attention) shrinks the memory needed at inference by compressing keys/values. Why does it do badly at small scale — and can it be fixed?',
+    read: 'Final perplexity per model — <strong>shorter bars are better</strong>. The dashed line is the standard GQA baseline to beat.',
+    take: 'The compression was too tight (rank 64). Widening it and giving position info its own path (M29) beat the baseline while still using 2.7× less inference memory than standard attention.'
+  },
+  kda: {
+    q: 'Linear attention (KDA) keeps a fixed-size memory instead of remembering every token. What does it lose?',
+    read: 'Two benchmarks, <strong>higher is better</strong>. LAMBADA tests recalling a specific earlier word; BLiMP tests local grammar. M19 is the linear-attention model; the others use standard attention.',
+    take: 'It\'s just as good at grammar but much worse at exact recall — a fixed memory can\'t store everything. This limitation is what the Mnemos-DNA project later fixes.'
+  },
+  codemind: {
+    q: 'Can a 1.5B-parameter Mixture-of-Experts model be trained properly on a tiny budget?',
+    read: 'Training loss as the model reads more data (x-axis, tokens) — <strong>falling is good</strong>. The dashed line is the expert load-balancing loss; flat and low means all experts are being used.',
+    take: 'Loss fell smoothly from 10.5 to ~4.0 on a $10 cloud run with no instabilities, and no experts went unused — the memory-saving pipeline works.'
+  }
+};
 
 renderChart('muon');
 
